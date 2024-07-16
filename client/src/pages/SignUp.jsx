@@ -81,7 +81,7 @@ const SignUp = () => {
                     <Spinner size={'sm'} />
                     <span className='pl-3'>Loading...</span>
                   </>
-                ) : 'Signup'
+                ) : 'Sign Up'
               }
             </Button>
           </form>
