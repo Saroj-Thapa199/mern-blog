@@ -26,6 +26,7 @@ const DashProfile = () => {
     }
     if (!file.type.startsWith('image/')) {
       setImageFileUploadError('Please select an image file.');
+      setImageFile(null)
       setImageFileUrl(null);
       setImageFileUploadProgress(null);
       return;
@@ -39,6 +40,7 @@ const DashProfile = () => {
 
     setImageFile(e.target.files[0]);
     setImageFileUrl(URL.createObjectURL(file));
+    setImageFileUploadError(null)
   };
 
   const uploadImage = async () => {
@@ -52,7 +54,7 @@ const DashProfile = () => {
     //       }
     //     }
     //   }
-    setImageFileUploadError(null);
+    
     const storage = getStorage(app);
     const fileName = new Date().getTime() + imageFile.name;
     const storageRef = ref(storage, fileName);
