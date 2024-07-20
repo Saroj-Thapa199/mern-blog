@@ -1,5 +1,6 @@
 import Post from '../models/post.model.js';
 import { errorHandler } from '../utils/error.js';
+import { v4 as uuidv4 } from 'uuid';
 
 export const create = async (req, res, next) => {
   if (!req.user.isAdmin) {
@@ -8,12 +9,17 @@ export const create = async (req, res, next) => {
   if (!req.body.title || !req.body.content) {
     return next(errorHandler(403, 'Please provide all required fields'));
   }
-  const slug = req.body.title
+  let slug = req.body.title
     .split(' ')
     .join('-')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
+  let originalSlug = slug;
+
+  while (await Post.findOne({ slug })) {
+    slug = `${originalSlug}-${uuidv4().slice(0, 8)}`;
+  }
   const newPost = new Post({ ...req.body, slug, userId: req.user.id });
   try {
     const savedPost = await newPost.save();
