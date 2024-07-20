@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Modal, Table } from 'flowbite-react';
-import { Link } from 'react-router-dom';
-import { FaCheck, FaEdit, FaTimes } from 'react-icons/fa';
+import { FaCheck, FaTimes } from 'react-icons/fa';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 const DashUsers = () => {
@@ -15,9 +14,7 @@ const DashUsers = () => {
   const handleShowMore = async () => {
     const startIndex = users.length;
     try {
-      const res = await fetch(
-        `/api/user/getusers?startIndex=${startIndex}`
-      );
+      const res = await fetch(`/api/user/getusers?startIndex=${startIndex}`);
       const data = await res.json();
       if (res.ok) {
         setUsers((prev) => [...prev, ...data.users]);
@@ -31,8 +28,20 @@ const DashUsers = () => {
   };
 
   const handleDeleteUser = async () => {
-    setShowModal(false);
-    
+    try {
+      const res = await fetch(`api/user/delete/${userIdToDelete}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
+        setShowModal(false);
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -75,17 +84,25 @@ const DashUsers = () => {
                     {new Date(user.createdAt).toLocaleDateString()}
                   </Table.Cell>
                   <Table.Cell>
-                      <img
-                        src={user.profilePicture}
-                        alt={user.username}
-                        className='w-10 h-10 rounded-full object-cover bg-gray-500'
-                      />
+                    <img
+                      src={user.profilePicture}
+                      alt={user.username}
+                      className='w-10 h-10 rounded-full object-cover bg-gray-500'
+                    />
                   </Table.Cell>
                   <Table.Cell>
-                      <span className='font-medium text-gray-800 dark:text-gray-200'>{user.username}</span>
+                    <span className='font-medium text-gray-800 dark:text-gray-200'>
+                      {user.username}
+                    </span>
                   </Table.Cell>
                   <Table.Cell>{user.email}</Table.Cell>
-                  <Table.Cell>{user.isAdmin ? (<FaCheck className='text-green-500'/>) : (<FaTimes className='text-red-500'/>)}</Table.Cell>
+                  <Table.Cell>
+                    {user.isAdmin ? (
+                      <FaCheck className='text-green-500' />
+                    ) : (
+                      <FaTimes className='text-red-500' />
+                    )}
+                  </Table.Cell>
                   <Table.Cell>
                     <span
                       onClick={() => {
