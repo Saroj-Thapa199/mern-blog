@@ -11,7 +11,7 @@ const CommentSection = ({ postId }) => {
   const [comments, setComments] = useState([]);
   const [commentError, setCommentError] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +34,7 @@ const CommentSection = ({ postId }) => {
       if (res.ok) {
         setComment('');
         setCommentError(null);
-        setComments([data, ...comments])
+        setComments([data, ...comments]);
       }
     } catch (error) {
       setCommentError(error.message);
@@ -45,28 +45,44 @@ const CommentSection = ({ postId }) => {
   const handleLike = async (commentId) => {
     try {
       if (!currentUser) {
-        navigate('/sign-in')
+        navigate('/sign-in');
         return;
       }
       const res = await fetch(`/api/comment/likeComment/${commentId}`, {
         method: 'PUT',
-      })
+      });
       if (res.ok) {
-        const data = await res.json()
+        const data = await res.json();
         // setComments(data)
-        setComments(comments.map((comment) => 
-          comment._id === commentId ? {
-            ...comment,
-            likes: data.likes,
-            numberOfLikes: data.numberOfLikes
-          } : comment
-
-        ))
+        setComments(
+          comments.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  likes: data.likes,
+                  numberOfLikes: data.numberOfLikes,
+                }
+              : comment
+          )
+        );
       }
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
-  }
+  };
+
+  const handleEdit = async (commentId, editedContent) => {
+    setComments(
+      comments.map((comment) =>
+        comment._id === commentId
+          ? {
+              ...comment,
+              content: editedContent.trim().replace(/\s{2,}/g, ' '),
+            }
+          : comment
+      )
+    );
+  };
 
   useEffect(() => {
     const getComments = async () => {
@@ -145,8 +161,13 @@ const CommentSection = ({ postId }) => {
               <p>{comments.length}</p>
             </div>
           </div>
-          {comments.map(comment => (
-            <Comment key={comment._id} comment={comment} onLike={handleLike} />
+          {comments.map((comment) => (
+            <Comment
+              key={comment._id}
+              comment={comment}
+              onLike={handleLike}
+              onEdit={handleEdit}
+            />
           ))}
         </>
       )}
