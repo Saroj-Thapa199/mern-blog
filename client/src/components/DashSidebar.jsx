@@ -50,7 +50,7 @@ const DashSidebar = () => {
           {currentUser.isAdmin && (
             <Link to='/dashboard?tab=dash'>
             <Sidebar.Item
-              active={tab === 'dash' || tab}
+              active={tab === 'dash' || !tab}
               icon={HiChartPie}
               className='cursor-pointer'
               as='div'
