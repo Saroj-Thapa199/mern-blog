@@ -19,7 +19,12 @@ const UpdatePost = () => {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    category: 'uncategorized',
+    image: '',
+  });
   const [publishError, setPublishError] = useState(null);
   const { postId } = useParams();
 
@@ -103,7 +108,6 @@ const UpdatePost = () => {
         if (res.ok) {
           setPublishError(null);
           setFormData(data.posts[0]);
-          console.log(data.posts);
         }
       };
       fetchPost();
