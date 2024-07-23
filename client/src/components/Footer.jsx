@@ -24,11 +24,11 @@ const FooterCom = () => {
               <Footer.Title title='About' />
               <Footer.LinkGroup col>
                 <Footer.Link
-                  href='https://www.100jsprojects.com'
+                  href='https://food-del-frontend-ugaa.onrender.com/'
                   target='_blank'
                   rel='noopener noreferrer'
                 >
-                  100 JS Projects
+                  Food Del App
                 </Footer.Link>
                 <Footer.Link
                   href='/about'

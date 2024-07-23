@@ -9,12 +9,12 @@ import { useEffect, useState } from 'react';
 
 export default function Header() {
   const path = useLocation().pathname;
-  const location = useLocation()
+  const location = useLocation();
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleSignout = async () => {
     try {
@@ -26,7 +26,7 @@ export default function Header() {
         console.log(data.message);
       } else {
         dispatch(signoutSuccess());
-        navigate('/sign-in')
+        navigate('/sign-in');
       }
     } catch (error) {
       console.log(error.message);
@@ -34,20 +34,20 @@ export default function Header() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     // const urlParams = new URLSearchParams(location.search)
     // urlParams.set('searchTerm', searchTerm)
     // const searchQuery = urlParams.toString()
-    navigate(`/search?searchTerm=${searchTerm}`)
-  }
+    navigate(`/search?searchTerm=${searchTerm}`);
+  };
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(location.search)
-    const searchTermFromUrl = urlParams.get('searchTerm')
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get('searchTerm');
     if (searchTermFromUrl) {
-      setSearchTerm(searchTermFromUrl)
+      setSearchTerm(searchTermFromUrl);
     }
-  }, [location.search])
+  }, [location.search]);
 
   return (
     <Navbar className='border-b-2'>
@@ -70,7 +70,7 @@ export default function Header() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </form>
-      <Button className='w-12 h-10 lg:hidden' color='gray' pill>
+      <Button type='button' className='w-12 h-10 lg:hidden cursor-pointer' color='gray' pill onClick={() => navigate('/search')}>
         <AiOutlineSearch />
       </Button>
       <div className='flex gap-2 md:order-2'>
@@ -96,6 +96,14 @@ export default function Header() {
                 {currentUser.email}
               </span>
             </Dropdown.Header>
+            {currentUser.isAdmin && (
+              <>
+                <Link to={'/dashboard?tab=dash'}>
+                  <Dropdown.Item>Dashboard</Dropdown.Item>
+                </Link>
+                <Dropdown.Divider />
+              </>
+            )}
             <Link to={'/dashboard?tab=profile'}>
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
